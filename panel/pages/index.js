@@ -9,7 +9,7 @@ import Title from '../components/Title';
 const Index = () => {
   return (
     <Layout>
-      <Title>Gerenciar Categorias</Title>
+      <Title>DevShop Painel de Controle</Title>
 
       <div className='mt-4'>
         <div className='flex flex-wrap -mx-6'>

@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+
 export default function Table({ children }) {
   return <table className='min-w-full'>{children}</table>;
 }
@@ -31,10 +33,10 @@ const TableTR = ({ children }) => {
   return <tr>{children}</tr>;
 };
 
-const TableTD = ({ name, email, title, description, status, role }) => {
+const TableTD = ({ name, email, title, description, status, role, handleRemove }) => {
   return (
     <>
-      <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200'>
+      {/* <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200'>
         <div className='flex items-center'>
           <div className='flex-shrink-0 h-10 w-10'>
             <img
@@ -51,14 +53,14 @@ const TableTD = ({ name, email, title, description, status, role }) => {
             <div className='text-sm leading-5 text-gray-500'>{email}</div>
           </div>
         </div>
-      </td>
+      </td> */}
 
       <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200'>
         <div className='text-sm leading-5 text-gray-900'>{title}</div>
         <div className='text-sm leading-5 text-gray-500'>{description}</div>
       </td>
 
-      <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200'>
+      {/* <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200'>
         <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
           {status}
         </span>
@@ -66,11 +68,14 @@ const TableTD = ({ name, email, title, description, status, role }) => {
 
       <td className='px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5 text-gray-500'>
         {role}
-      </td>
+      </td> */}
 
       <td className='px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium'>
         <a href='#' className='text-indigo-600 hover:text-indigo-900'>
           Edit
+        </a>{" "}|{" "}
+        <a href='#' onClick={handleRemove} className='text-indigo-600 hover:text-indigo-900'>
+          Remove
         </a>
       </td>
     </>
