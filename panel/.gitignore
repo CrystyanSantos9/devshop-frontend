@@ -13,10 +13,12 @@ lerna-debug.log*
 
 # OS
 .DS_Store
-
+.docker/
 # Tests
 /coverage
 /.nyc_output
+
+.env.local
 
 # IDEs and editors
 /.idea
