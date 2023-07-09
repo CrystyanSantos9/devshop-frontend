@@ -1,58 +1,73 @@
-import React from 'react';
-import { MdShoppingCart, MdLeaderboard, MdShoppingBag } from 'react-icons/md';
+import { useFormik } from 'formik';
 
-import Card from '../components/Card';
-import Layout from '../components/Layout';
-import Table from '../components/Table';
-import Title from '../components/Title';
+import Input from '../components/Input';
+import Button from '../components/Button';
+import { useMutation } from '../lib/graphql';
+import { useRouter } from 'next/router';
+
+const AUTH = `
+  mutation auth($email: String!, $passwd: String!){
+    auth(input: {
+      email: $email,
+      passwd: $passwd
+    }){
+      refreshToken
+      accessToken
+    }
+  }
+`;
 
 const Index = () => {
+  const router = useRouter();
+  const [authData, auth] = useMutation(AUTH);
+
+  const form = useFormik({
+    initialValues: {
+      email: '',
+      passwd: '',
+    },
+    onSubmit: async values => {
+      const data = await auth(values);
+      if (data && data.data) {
+        localStorage.setItem('refreshToken', data.data.auth.refreshToken);
+        localStorage.setItem('accessToken', data.data.auth.accessToken);
+        router.push('/dashboard');
+      } else {
+        console.log('error');
+      }
+    },
+  });
   return (
-    <Layout>
-      <Title>DevShop Painel de Controle</Title>
+    <div className='bg-grey-lighter min-h-screen flex flex-col'>
+      <div className='container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2'>
+        <div className='bg-white px-6 py-8 rounded shadow-md text-black w-full'>
+          <h1 className='mb-8 text-3xl text-center'>Sign in</h1>
+          <form onSubmit={form.handleSubmit}>
+            <Input
+              label='E-mail'
+              placeholder='Seu e-mail'
+              name='email'
+              value={form.values.email}
+              onChange={form.handleChange}
+              errorMessage={form}
+              onBlur={form.handleBlur}
+            />
 
-      <div className='mt-4'>
-        <div className='flex flex-wrap -mx-6'>
-          <Card>
-            <Card.Icon>
-              <MdShoppingCart className='h-8 w-8 text-white' />
-            </Card.Icon>
-            <Card.Data>
-              <Card.Title>8,282</Card.Title>
-              <Card.Description>Products</Card.Description>
-            </Card.Data>
-          </Card>
+            <Input
+              label='Senha'
+              placeholder='Sua senha'
+              name='passwd'
+              value={form.values.passwd}
+              onChange={form.handleChange}
+              errorMessage={form}
+              onBlur={form.handleBlur}
+            />
 
-          <Card>
-            <Card.Icon colorIcon='bg-blue-600'>
-              <MdLeaderboard className='h-8 w-8 text-white' />
-            </Card.Icon>
-            <Card.Data>
-              <Card.Title>2000</Card.Title>
-              <Card.Description>Products</Card.Description>
-            </Card.Data>
-          </Card>
-
-          <Card className='w-full mt-6 px-6 sm:w-1/2 xl:w-1/3 xl:mt-0'>
-            <Card.Icon colorIcon='bg-orange-600'>
-              <MdShoppingBag className='h-8 w-8 text-white' />
-            </Card.Icon>
-            <Card.Data>
-              <Card.Title>215,542</Card.Title>
-              <Card.Description>Available Products</Card.Description>
-            </Card.Data>
-          </Card>
+            <Button>Entrar</Button>
+          </form>
         </div>
       </div>
-
-      <div className='mt-8'></div>
-
-      <div className='flex flex-col mt-8'>
-        <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'></div>
-        </div>
-      </div>
-    </Layout>
+    </div>
   );
 };
 
