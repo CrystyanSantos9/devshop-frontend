@@ -4,6 +4,8 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import { useMutation } from '../lib/graphql';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Alert from '../components/Alert';
 
 const AUTH = `
   mutation auth($email: String!, $passwd: String!){
@@ -18,6 +20,7 @@ const AUTH = `
 `;
 
 const Index = () => {
+  const [signinErros, setSigninErros] = useState(false);
   const router = useRouter();
   const [authData, auth] = useMutation(AUTH);
 
@@ -33,10 +36,26 @@ const Index = () => {
         localStorage.setItem('accessToken', data.data.auth.accessToken);
         router.push('/dashboard');
       } else {
-        console.log('error');
+        setSigninErros(true);
       }
     },
   });
+
+  useEffect(() => {
+    let timer = setInterval(() => {
+      if (
+        localStorage.getItem('refreshToken') &&
+        localStorage.getItem('accessToken')
+      ) {
+        router.push('/dashboard');
+      }
+    }, 1000);
+    //ao finalizar uso da página
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+  
   return (
     <div className='bg-grey-lighter min-h-screen flex flex-col'>
       <div className='container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2'>
@@ -62,6 +81,8 @@ const Index = () => {
               errorMessage={form}
               onBlur={form.handleBlur}
             />
+
+            {signinErros && <Alert>E-mail e/ou senha inválidos.</Alert>}
 
             <Button>Entrar</Button>
           </form>

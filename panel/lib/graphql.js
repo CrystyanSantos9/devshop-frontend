@@ -3,13 +3,33 @@ import { useState } from 'react';
 import useSWR from 'swr';
 
 const fetcher = async query => {
+  const accessToken = localStorage.getItem('accessToken');
   const URL_API = process.env.NEXT_PUBLIC_API;
+
+  const headers = {
+    'Content-type': 'application/json',
+  };
+
+  if (accessToken) {
+    headers['authorization'] = 'Bearer ' + accessToken;
+  }
+
   const res = await fetch(URL_API, {
-    headers: {
-      'Content-type': 'application/json',
-    },
+    headers,
     method: 'POST',
     body: JSON.stringify(query),
+  });
+
+  const json = await res.json();
+  return json;
+};
+
+const uploader = async formData => {
+  const URL_API = process.env.NEXT_PUBLIC_API;
+  const res = await fetch(URL_API, {
+    headers: {},
+    method: 'POST',
+    body: formData,
   });
   const json = await res.json();
   return json;
@@ -40,17 +60,6 @@ const useMutation = query => {
     }
   };
   return [data, mutate];
-};
-
-const uploader = async formData => {
-  const URL_API = process.env.NEXT_PUBLIC_API;
-  const res = await fetch(URL_API, {
-    headers: {},
-    method: 'POST',
-    body: formData,
-  });
-  const json = await res.json();
-  return json;
 };
 
 const useUpload = query => {

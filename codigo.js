@@ -1,10 +1,12 @@
-onSubmit: async (values) => {
-  const data = await auth(values);
-  if (data && data.data) {
-    localStorage.setItem("refreshToken", data.data.auth.refreshToken);
-    localStorage.setItem("accessToken", data.data.auth.accessToken);
-    router.push("/dashboard");
-  } else {
-    console.log("error");
+async auth(email: string, passwd: string): Promise<[User, AuthToken]> {
+    const userExists = await this.userRepository.findOne({ where: [{ email }] })
+    if (userExists && (await userExists.checkPassword(passwd))) {
+      const authToken = new AuthToken()
+      authToken.user = userExists
+      const token = await this.authTokenRepository.save(authToken)
+      console.log(token)
+      return [userExists, authToken]
+    } else {
+      return null
+    }
   }
-};

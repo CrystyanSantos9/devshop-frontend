@@ -19,7 +19,7 @@ export default function Alert({ children }) {
         ></path>
       </svg>
       <div>
-        <span className='font-medium'> Atenção! </span> 
+        <span className='font-medium'> Atenção! </span>
         {children}
       </div>
     </div>
