@@ -12,7 +12,7 @@ import { fetcher, useMutation, useQuery } from '../../lib/graphql';
 
 const CREATE_CATEGORY = `
             mutation createCategory($name: String!, $slug: String!) {
-                createCategory(input: {
+              panelCreateCategory(input: {
                     name: $name,
                     slug: $slug
                 }) {

@@ -22,13 +22,13 @@ const GET_ALL_BRANDS = `
 
 const DELETE_BRAND = `
  mutation deleteBrand($id: String!){
-   deleteBrand(id: $id)
+  panelDeleteBrand(id: $id)
  }
 `;
 
 const REMOVE_BRAND_LOGO = `
  mutation removeBrandLogo($id: String!){
-    removeBrandLogo(id: $id)
+  panelRemoveBrandLogo(id: $id)
  }
 `;
 

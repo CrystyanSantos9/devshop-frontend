@@ -24,7 +24,7 @@ const GET_ALL_PRODUCTS = `
 
 const DELETE_CATEGORY = `
  mutation deleteProduct($id: String!){
-   deleteProduct(id: $id)
+  panelDeleteProduct(id: $id)
  }
 `;
 

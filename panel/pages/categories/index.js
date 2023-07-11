@@ -21,7 +21,7 @@ const GET_ALL_CATEGORIES = `
 
 const DELETE_CATEGORY = `
  mutation deleteCategory($id: String!){
-   deleteCategory(id: $id)
+  panelDeleteCategory(id: $id)
  }
 `;
 
@@ -89,9 +89,7 @@ const Index = () => {
           {data &&
             data?.getAllCategories &&
             data.getAllCategories.length === 0 && (
-              <Alert>
-              Nenhuma categoria criada até o momento!
-              </Alert>
+              <Alert>Nenhuma categoria criada até o momento!</Alert>
             )}
 
           {data && data?.getAllCategories && data.getAllCategories.length > 0 && (
