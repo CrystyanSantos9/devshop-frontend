@@ -2,8 +2,20 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MdLabel, MdHome } from 'react-icons/md';
 
 import Menu from '../Menu';
+import { useQuery } from '../../lib/graphql';
+
+const GET_ME = `
+  query {
+    panelGetMe{
+      id
+      name
+      email
+    }
+  }
+`
 
 const Layout = ({ children }) => {
+  const {data} = useQuery(GET_ME)
   const screenSize = useRef(null);
   const [sideBarOpen, setsideBarOpen] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -30,6 +42,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
+      {data && JSON.stringify(data, null, 2)}
       <div className='flex h-screen bg-gray-200'>
         {sideBarOpen ? (
           <>
@@ -63,6 +76,9 @@ const Layout = ({ children }) => {
                   </Menu.NavItem>
                   <Menu.NavItem href='/products' Icon={MdLabel}>
                     Produtos
+                  </Menu.NavItem>
+                  <Menu.NavItem href='/users' Icon={MdLabel}>
+                    Usuários
                   </Menu.NavItem>
                 </Menu.Nav>
               </Menu>

@@ -1,12 +1,5 @@
-async auth(email: string, passwd: string): Promise<[User, AuthToken]> {
-    const userExists = await this.userRepository.findOne({ where: [{ email }] })
-    if (userExists && (await userExists.checkPassword(passwd))) {
-      const authToken = new AuthToken()
-      authToken.user = userExists
-      const token = await this.authTokenRepository.save(authToken)
-      console.log(token)
-      return [userExists, authToken]
-    } else {
-      return null
-    }
-  }
+<img
+  className="h-8 w-8 rounded-full object-cover mx-1"
+  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=334&amp;q=80"
+  alt="avatar"
+/>;

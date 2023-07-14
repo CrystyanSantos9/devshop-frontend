@@ -66,7 +66,6 @@ const fetcher = async query => {
   //se erro, gerar novo accessToken
   const jsonAccessToken = await getNewAccessToken(URL_API);
 
-  console.log('Novo jsson----->>>', jsonAccessToken);
   if (jsonAccessToken.data) {
     const newAccessToken = jsonAccessToken.data.accessToken;
     localStorage.setItem('accessToken', newAccessToken);
@@ -86,6 +85,8 @@ const fetcher = async query => {
     }
   }
   // se chegou aqui
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
   window.location = '/';
   return null;
 };
@@ -110,6 +111,7 @@ const uploader = async formData => {
 
   //caso haja erro ( sem access token, ou com expiração )
   const jsonAccessToken = await getNewAccessToken();
+  console.log(jsonAccessToken);
   if (jsonAccessToken.data) {
     const newAccessToken = jsonAccessToken.data.accessToken;
     localStorage.setItem('accessToken', newAccessToken);
@@ -129,6 +131,8 @@ const uploader = async formData => {
   }
 
   // nao tem accesstoken, nem refreshtoken  ( inválidos ou auxentes )
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
   window.location = '/';
   return null;
 };

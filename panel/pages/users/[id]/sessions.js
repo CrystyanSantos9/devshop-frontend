@@ -1,55 +1,35 @@
 import React from 'react';
 import { MdShoppingCart, MdLeaderboard, MdShoppingBag } from 'react-icons/md';
 
-import Alert from '../../components/Alert';
-import Button from '../../components/Button';
-import Card from '../../components/Card';
-import Layout from '../../components/Layout';
-import Table from '../../components/Table';
-import Title from '../../components/Title';
-import { useMutation, useQuery } from '../../lib/graphql';
+import Button from '../../../components/Button';
+import Card from '../../../components/Card';
+import Layout from '../../../components/Layout';
+import Table from '../../../components/Table';
+import Title from '../../../components/Title';
+import { useMutation, useQuery } from '../../../lib/graphql';
+import Alert from '../../../components/Alert';
+import { Router, useRouter } from 'next/router';
 
-const GET_ALL_BRANDS = `
-            query {
-                getAllBrands{
-                    id
-                    name
-                    slug
-                    logo
-                  }
-            }
-        `;
-
-const DELETE_BRAND = `
- mutation deleteBrand($id: String!){
-  panelDeleteBrand(id: $id)
+const DELETE_USER = `
+ mutation deleteUser($id: String!){
+  panelDeleteUser(id: $id)
  }
 `;
 
-const REMOVE_BRAND_LOGO = `
- mutation removeBrandLogo($id: String!){
-  panelRemoveBrandLogo(id: $id)
- }
-`;
-
-const Index = () => {
-  const { data, error, mutate } = useQuery(GET_ALL_BRANDS);
-  const [deleteData, deleteBrand] = useMutation(DELETE_BRAND);
-  const [deleteBrandLogoData, deleteBrandLogo] = useMutation(REMOVE_BRAND_LOGO);
-
+const Sessions = () => {
+  const router = useRouter();
+  const { data, error, mutate } = useQuery(`
+  query {
+    panelGetAllUserSessions(id: "${router.query.id}"){
+          id
+        }
+  }
+`);
+  const [deleteData, deleteUser] = useMutation(DELETE_USER);
 
   const remove = id => async () => {
     try {
-      await deleteBrand({ id });
-      mutate({ ...data, name: 'removeData' });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const removeBrandLogo = id => async () => {
-    try {
-      await deleteBrandLogo({ id });
+      await deleteUser({ id });
       mutate({ ...data, name: 'removeData' });
     } catch (err) {
       console.log(err);
@@ -57,14 +37,14 @@ const Index = () => {
   };
 
   if (error) return <div>Error {JSON.stringify(error)}</div>;
-  // if (!data) return <div>{JSON.stringify(data.getAllBrands, null, 2)}</div>;
+  // if (!data) return <div>{JSON.stringify(data.getAllUsers, null, 2)}</div>;
 
   return (
     <Layout>
-      <Title>Gerenciar Marcas</Title>
+      <Title>Gerenciar Sessões</Title>
       <div className='mt-8'></div>
       <div>
-        <Button.Link href={'/brands/create'}>Criar marca</Button.Link>
+        <Button.Link href={'/users/create'}>Criar usuário</Button.Link>
       </div>
       <div className='mt-4'>
         <div className='flex flex-wrap -mx-6'>
@@ -104,31 +84,33 @@ const Index = () => {
 
       <div className='flex flex-col mt-8'>
         <div className='-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
-          {data && data?.getAllBrands && data.getAllBrands.length === 0 && (
-            <Alert>Nenhuma marca criada até o momento!</Alert>
-          )}
+          {data &&
+            data?.panelGetAllUserSessions &&
+            data.panelGetAllUserSessions.length === 0 && (
+              <Alert>Nenhuma token criado até o momento!</Alert>
+            )}
 
-          {data && data?.getAllBrands && data.getAllBrands.length > 0 && (
+          {data && data?.panelGetAllUserSessions && data.panelGetAllUserSessions.length > 0 && (
             <div className='align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200'>
               <Table>
                 <Table.Head>
-                  <Table.TH>MARCAS</Table.TH>
+                  <Table.TH className='px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider'>
+                    SESSÔES
+                  </Table.TH>
                 </Table.Head>
 
                 <Table.Body>
-                  {data?.getAllBrands &&
-                    data.getAllBrands.map(item => {
+                  {data?.panelGetAllUserSessions &&
+                    data.panelGetAllUserSessions.map(item => {
                       return (
                         <Table.TR key={item.id}>
                           <Table.TD
                             itemId={item.id}
                             handleRemove={remove(item.id)}
-                            handleRemoveBrand={removeBrandLogo(item.id)}
-                            title={item.name}
-                            description={item.slug}
-                            logo={item.logo}
-                            href='/brands'
-                          />
+                            title={item.id}
+                            description={item.email}
+                            href='/users'
+                          ></Table.TD>
                         </Table.TR>
                       );
                     })}
@@ -142,4 +124,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Sessions;

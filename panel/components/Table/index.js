@@ -12,7 +12,9 @@ const TableHead = ({ children }) => {
       <tr>
         {children}
         <th className='px-6 py-3 border-b border-gray-200 bg-gray-50'></th>
-        <th className='px-6 py-3 border-b border-gray-200 bg-gray-50'></th>
+        {children.props.children == 'MARCAS' && (
+          <th className='px-6 py-3 border-b border-gray-200 bg-gray-50'></th>
+        )}
       </tr>
     </thead>
   );
@@ -89,7 +91,7 @@ const TableTD = ({
       </td> */}
 
       <td className='px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium'>
-        {logo !== null && (
+        {logo !== '' && (
           <>
             <Link href={'#'}>
               <a
@@ -108,6 +110,16 @@ const TableTD = ({
             <Link href={`${href}/${itemId}/upload`}>
               <a className='text-indigo-600 hover:text-indigo-900'>
                 Upload Logo
+              </a>
+            </Link>{' '}
+            |{' '}
+          </>
+        )}
+        {href == '/users' && (
+          <>
+            <Link href={`${href}/${itemId}/sessions`}>
+              <a className='text-indigo-600 hover:text-indigo-900'>
+                Sessões
               </a>
             </Link>{' '}
             |{' '}
